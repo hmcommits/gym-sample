@@ -8,6 +8,7 @@
 export const ASSET_MAP = {
   logo: 'logo.webp',
   hero: 'hero.webp',
+  heroMobile: 'hero-mobile.webp',
   programStrength: 'program-strength.webp',
   programWeightloss: 'program-weightloss.webp',
   programEndurance: 'program-endurance.webp',
@@ -39,6 +40,10 @@ const CLOUDINARY_CLOUD_NAME =
 
 const CLOUDINARY_FOLDER = 'peakform';
 
+const ASSET_VERSIONS: Partial<Record<AssetKey, string>> = {
+  heroMobile: 'v1794049695',
+};
+
 /**
  * Returns the optimized WebP Cloudinary CDN URL for an image asset.
  */
@@ -47,7 +52,8 @@ export function getAssetUrl(key: AssetKey, transformations: string = 'f_auto,q_a
   if (!fileName) return '';
 
   const assetId = fileName.replace(/\.[^/.]+$/, '');
-  return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${transformations}/v1/${CLOUDINARY_FOLDER}/${assetId}.webp`;
+  const version = ASSET_VERSIONS[key] || 'v1';
+  return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${transformations}/${version}/${CLOUDINARY_FOLDER}/${assetId}.webp`;
 }
 
 /**

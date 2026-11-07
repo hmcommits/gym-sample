@@ -128,3 +128,7 @@
 .animate-pulse-subtle {
   animation: pulseSubtle 3s ease-in-out infinite;
 }
+
+astro-dev-toolbar {
+  display: none !important;
+}
