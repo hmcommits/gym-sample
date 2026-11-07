@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Menu, X, ArrowRight, Phone, MapPin, Clock } from 'lucide-react';
+import { X, ArrowRight, Phone, MapPin, Clock } from 'lucide-react';
 import { getAssetUrl } from '../utils/cloudinary';
 
 export default function MobileNav() {
@@ -10,6 +10,16 @@ export default function MobileNav() {
 
   useEffect(() => {
     setMounted(true);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') close();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = '';
+      }
+    };
   }, []);
 
   const toggle = () => {
@@ -42,8 +52,15 @@ export default function MobileNav() {
   };
 
   const drawerContent = (
-    <div className="fixed inset-0 z-50 flex flex-col justify-between bg-[#09090E] p-6 sm:p-8 animate-fadeIn overflow-y-auto">
-      {/* Top Bar inside drawer */}
+    <div
+      aria-hidden={!isOpen}
+      className={`fixed inset-0 z-50 flex flex-col justify-between bg-[#070709]/95 backdrop-blur-2xl p-6 sm:p-8 overflow-y-auto transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isOpen
+          ? 'opacity-100 translate-y-0 pointer-events-auto visible'
+          : 'opacity-0 -translate-y-full pointer-events-none invisible'
+      }`}
+    >
+      {/* Top Bar inside drawer: aligned with header */}
       <div className="flex items-center justify-between pb-6 border-b border-white/10 flex-shrink-0">
         <a href="#home" onClick={close} className="flex-shrink-0">
           <img
@@ -61,14 +78,21 @@ export default function MobileNav() {
         </button>
       </div>
 
-      {/* Nav Links */}
+      {/* Nav Links with staggered slide-in transition */}
       <div className="py-6 sm:py-8 space-y-4 my-auto">
-        {navLinks.map((link) => (
+        {navLinks.map((link, idx) => (
           <a
             key={link.label}
             href={link.href}
             onClick={close}
-            className="font-display italic text-3xl sm:text-4xl font-extrabold text-white hover:text-[#CCFF00] uppercase tracking-wider block transition-colors"
+            style={{
+              transitionDelay: isOpen ? `${60 + idx * 35}ms` : '0ms',
+            }}
+            className={`font-display italic text-3xl sm:text-4xl font-extrabold uppercase tracking-wider block transition-all duration-300 ${
+              isOpen
+                ? 'opacity-100 translate-x-0 text-white hover:text-[#CCFF00]'
+                : 'opacity-0 -translate-x-4 text-white'
+            }`}
           >
             {link.label}
           </a>
@@ -76,7 +100,12 @@ export default function MobileNav() {
       </div>
 
       {/* Bottom Actions & Contact Info */}
-      <div className="space-y-4 pt-6 border-t border-white/10 flex-shrink-0">
+      <div
+        style={{ transitionDelay: isOpen ? '280ms' : '0ms' }}
+        className={`space-y-4 pt-6 border-t border-white/10 flex-shrink-0 transition-all duration-300 ${
+          isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
+      >
         <button
           onClick={handleJoinClick}
           className="w-full bg-[#CCFF00] hover:bg-[#D4F933] text-black font-extrabold uppercase tracking-wider py-4 px-6 rounded-full text-sm transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(204,255,0,0.35)] cursor-pointer"
@@ -105,17 +134,31 @@ export default function MobileNav() {
 
   return (
     <div className="lg:hidden">
-      {/* Hamburger Button */}
+      {/* Morphing Hamburger Button */}
       <button
         onClick={toggle}
-        className="w-10 h-10 rounded-full border border-white/20 bg-white/10 flex items-center justify-center text-white hover:text-[#CCFF00] hover:border-[#CCFF00] transition-colors cursor-pointer"
+        className="w-10 h-10 rounded-full border border-white/20 bg-white/10 flex flex-col items-center justify-center gap-1 text-white hover:text-[#CCFF00] hover:border-[#CCFF00] transition-colors cursor-pointer"
         aria-label="Toggle navigation menu"
       >
-        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        <span
+          className={`w-4 h-0.5 bg-current rounded-full transition-all duration-300 ease-out origin-center ${
+            isOpen ? 'rotate-45 translate-y-1.5' : ''
+          }`}
+        />
+        <span
+          className={`w-4 h-0.5 bg-current rounded-full transition-all duration-200 ease-out ${
+            isOpen ? 'opacity-0 scale-x-0' : 'opacity-100'
+          }`}
+        />
+        <span
+          className={`w-4 h-0.5 bg-current rounded-full transition-all duration-300 ease-out origin-center ${
+            isOpen ? '-rotate-45 -translate-y-1.5' : ''
+          }`}
+        />
       </button>
 
-      {/* Portal to body so header's backdrop-filter never traps or clips the drawer */}
-      {isOpen && mounted && typeof document !== 'undefined'
+      {/* Portal to body: always mounted when client-ready so exit/entry animations run seamlessly */}
+      {mounted && typeof document !== 'undefined'
         ? createPortal(drawerContent, document.body)
         : null}
     </div>
