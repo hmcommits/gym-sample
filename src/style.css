@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+    background-color: #070709;
+    font-family: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
+  }
+
+  body {
+    background-color: #070709;
+    color: #F3F4F6;
+    overflow-x: hidden;
+  }
+
+  /* Custom athletic display typography */
+  .font-display {
+    font-family: 'Barlow Condensed', 'Oswald', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0E0E12;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2A35;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #CCFF00;
+}
+
+/* Glassmorphism surfaces */
+.glass-panel {
+  background: rgba(14, 14, 18, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-nav {
+  background: rgba(7, 7, 9, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-card {
+  background: linear-gradient(180deg, rgba(22, 22, 28, 0.8) 0%, rgba(13, 13, 17, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(204, 255, 0, 0.4);
+  box-shadow: 0 15px 35px -10px rgba(204, 255, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+/* Glow effects */
+.neon-text-glow {
+  text-shadow: 0 0 20px rgba(204, 255, 0, 0.5);
+}
+
+.neon-border-glow {
+  box-shadow: 0 0 25px rgba(204, 255, 0, 0.25), inset 0 0 15px rgba(204, 255, 0, 0.1);
+}
+
+/* Pulsing badge animation */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(204, 255, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(204, 255, 0, 0.7);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s infinite;
+}
+
+/* Image zoom inside card */
+.card-zoom-img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.group:hover .card-zoom-img {
+  transform: scale(1.06);
+}
+
+/* Modal animations */
+.modal-backdrop {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-content {
+  opacity: 0;
+  transform: scale(0.95) translateY(20px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-backdrop.open .modal-content {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}

@@ -1,0 +1,46 @@
+---
+// Navbar matching reference.png exactly
+import MobileNav from './MobileNav';
+import { getAssetUrl } from '../utils/cloudinary';
+
+const logoUrl = getAssetUrl('logo');
+---
+
+<header class="fixed top-0 inset-x-0 z-40 bg-[rgba(7,7,9,0.92)] backdrop-blur-xl border-b border-white/[0.06]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-[64px] sm:h-[72px]">
+      
+      <!-- Logo -->
+      <a href="#home" class="flex-shrink-0">
+        <img src={logoUrl} alt="Peakform Fitness Club" class="h-7 sm:h-9 w-auto object-contain" />
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-8">
+        <a href="#home" class="relative text-[#CCFF00] text-sm font-semibold tracking-wide py-1">
+          Home
+          <span class="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#CCFF00] rounded-full shadow-[0_0_8px_rgba(204,255,0,0.8)]"></span>
+        </a>
+        <a href="#programs" class="text-gray-300 hover:text-white text-sm font-semibold tracking-wide transition-colors">Programs</a>
+        <a href="#trainers" class="text-gray-300 hover:text-white text-sm font-semibold tracking-wide transition-colors">Trainers</a>
+        <a href="#membership" class="text-gray-300 hover:text-white text-sm font-semibold tracking-wide transition-colors">Membership</a>
+        <a href="#about" class="text-gray-300 hover:text-white text-sm font-semibold tracking-wide transition-colors">About</a>
+        <a href="#contact" class="text-gray-300 hover:text-white text-sm font-semibold tracking-wide transition-colors">Contact</a>
+      </nav>
+
+      <!-- CTA + Mobile Menu -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button
+          onclick="window.dispatchEvent(new CustomEvent('open-join-modal', { detail: { plan: 'Premium' } }))"
+          class="hidden sm:inline-flex items-center gap-2 bg-[#CCFF00] hover:bg-[#D4F933] text-black font-extrabold uppercase tracking-wide text-xs sm:text-sm px-5 py-2.5 rounded-full transition-all duration-200 hover:shadow-[0_0_20px_rgba(204,255,0,0.5)] cursor-pointer"
+        >
+          <span>Join the Club</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+        <MobileNav client:load />
+      </div>
+    </div>
+  </div>
+</header>

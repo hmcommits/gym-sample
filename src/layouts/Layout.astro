@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+import { getAssetUrl } from '../utils/cloudinary';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Peakform Fitness Club | Build A Stronger, Healthier You",
+  description = "A premium fitness club with expert guidance, modern equipment, and a community that keeps you motivated. Located in Kalyan, Maharashtra.",
+} = Astro.props;
+
+const logoUrl = getAssetUrl('logo');
+const heroUrl = getAssetUrl('hero');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/webp" href={logoUrl} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#CCFF00" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={heroUrl} />
+
+    <!-- Google Fonts Preconnect and Direct Stylesheet Link -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-dark-950 text-gray-100 min-h-screen selection:bg-neon selection:text-black antialiased">
+    <slot />
+  </body>
+</html>

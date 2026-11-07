@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import FeatureBar from '../components/FeatureBar.astro';
+import Programs from '../components/Programs.astro';
+import AboutUs from '../components/AboutUs.astro';
+import Trainers from '../components/Trainers.astro';
+import PricingSection from '../components/PricingSection';
+import Testimonials from '../components/Testimonials';
+import CtaBanner from '../components/CtaBanner.astro';
+import Footer from '../components/Footer.astro';
+import VideoModal from '../components/VideoModal';
+import JoinModal from '../components/JoinModal';
+import TrainerModal from '../components/TrainerModal';
+---
+
+<Layout>
+  {/* Sticky Navigation Header */}
+  <Navbar />
+
+  {/* Main Landing Sections */}
+  <main>
+    <Hero />
+    <FeatureBar />
+    <Programs />
+    <AboutUs />
+    <Trainers />
+    <PricingSection client:visible />
+    <Testimonials client:visible />
+    <CtaBanner />
+  </main>
+
+  {/* Footer */}
+  <Footer />
+
+  {/* Interactive Modals (Client Islands) */}
+  <VideoModal client:load />
+  <JoinModal client:load />
+  <TrainerModal client:load />
+</Layout>

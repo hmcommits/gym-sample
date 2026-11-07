@@ -1,0 +1,59 @@
+---
+// CTA Banner — matching reference.png exactly: Left athlete cutout flush with banner | Center title + divider + desc | Right "Join the Club" button
+import { getAssetUrl } from '../utils/cloudinary';
+
+const athleteUrl = getAssetUrl('ctaAthlete');
+---
+
+<section class="py-10 sm:py-16 relative bg-[#070709] overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="relative bg-[#CCFF00] rounded-2xl sm:rounded-3xl lg:rounded-[40px] overflow-hidden shadow-[0_0_60px_rgba(204,255,0,0.35)] flex flex-col lg:flex-row items-center justify-between p-5 sm:p-8 lg:p-0 min-h-[140px] sm:min-h-[160px] gap-5 lg:gap-0">
+      
+      <!-- Subtle diagonal stripe texture on right -->
+      <div class="absolute inset-0 opacity-[0.06] pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #000 0, #000 2px, transparent 0, transparent 16px);" />
+
+      <!-- Left section: Athlete graphic + Title -->
+      <div class="flex items-center gap-4 sm:gap-8 relative z-10 w-full lg:w-auto h-full">
+        <!-- Athlete image flush with left banner curve on desktop, neat circular/square on mobile -->
+        <div class="relative w-20 h-20 sm:w-36 sm:h-36 lg:w-52 lg:h-full flex-shrink-0 overflow-hidden rounded-xl lg:rounded-none">
+          <img
+            src={athleteUrl}
+            alt="Peakform athlete"
+            class="w-full h-full object-cover object-center"
+          />
+        </div>
+
+        <!-- Headline -->
+        <h2 class="font-display italic font-black text-black uppercase leading-[0.88] text-2xl sm:text-4xl lg:text-5xl lg:whitespace-nowrap pr-2 sm:pr-4">
+          READY TO<br/>
+          TRANSFORM?
+        </h2>
+      </div>
+
+      <!-- Center section: Vertical divider + Description -->
+      <div class="flex items-center gap-4 sm:gap-8 relative z-10 w-full lg:flex-1 py-1 lg:py-0 px-0 lg:px-6">
+        <!-- Thin vertical divider (desktop only) -->
+        <div class="hidden lg:block w-px h-16 bg-black/25 flex-shrink-0" />
+
+        <!-- Description -->
+        <p class="text-black/85 text-xs sm:text-sm lg:text-base font-semibold leading-relaxed max-w-md">
+          Join Peakform Fitness Club today and take the first step towards a stronger, healthier and more confident you.
+        </p>
+      </div>
+
+      <!-- Right section: CTA Button -->
+      <div class="relative z-10 w-full lg:w-auto flex-shrink-0 lg:pr-10">
+        <button
+          onclick="window.dispatchEvent(new CustomEvent('open-join-modal', { detail: { plan: 'Premium' } }))"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 sm:gap-3 bg-black hover:bg-[#15151D] text-white font-extrabold uppercase tracking-wide text-xs sm:text-sm px-6 py-3.5 sm:px-8 sm:py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-2xl cursor-pointer group"
+        >
+          <span>Join the Club</span>
+          <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
