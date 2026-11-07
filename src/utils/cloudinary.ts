@@ -41,7 +41,8 @@ const CLOUDINARY_CLOUD_NAME =
 const CLOUDINARY_FOLDER = 'peakform';
 
 const ASSET_VERSIONS: Partial<Record<AssetKey, string>> = {
-  heroMobile: 'v1794051558',
+  heroMobile: 'v1794052830',
+  trainerNikita: 'v1794052886',
 };
 
 /**

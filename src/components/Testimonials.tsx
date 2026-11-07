@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getAssetUrl } from '../utils/cloudinary';
 
@@ -25,9 +25,68 @@ export default function Testimonials() {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isProgrammaticScroll = useRef(false);
 
-  const prev = () => setCurrentIndex((i) => (i === 0 ? reviews.length - 1 : i - 1));
-  const next = () => setCurrentIndex((i) => (i === reviews.length - 1 ? 0 : i + 1));
+  const scrollToCard = (index: number) => {
+    setCurrentIndex(index);
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const card = container.children[index] as HTMLElement;
+    if (card) {
+      isProgrammaticScroll.current = true;
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, 500);
+    }
+  };
+
+  const prev = () => {
+    const newIdx = currentIndex === 0 ? reviews.length - 1 : currentIndex - 1;
+    scrollToCard(newIdx);
+  };
+
+  const next = () => {
+    const newIdx = currentIndex === reviews.length - 1 ? 0 : currentIndex + 1;
+    scrollToCard(newIdx);
+  };
+
+  // Listen to mobile scroll/swipe to update currentIndex
+  const handleScroll = () => {
+    if (isProgrammaticScroll.current || !scrollRef.current) return;
+    const container = scrollRef.current;
+    const scrollLeft = container.scrollLeft;
+    const cardWidth = container.children[0]?.clientWidth || 300;
+    const index = Math.round(scrollLeft / cardWidth);
+    if (index >= 0 && index < reviews.length && index !== currentIndex) {
+      setCurrentIndex(index);
+    }
+  };
+
+  // Direct touch gesture support
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const diff = touchStartX.current - touchEndX.current;
+    if (diff > 50) {
+      next();
+    } else if (diff < -50) {
+      prev();
+    }
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
 
   return (
     <section id="reviews" className="py-14 sm:py-20 bg-[#070709] relative overflow-hidden">
@@ -46,7 +105,7 @@ export default function Testimonials() {
             </h2>
           </div>
           
-          {/* Navigation arrows — reference style: circle outline */}
+          {/* Navigation arrows */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <button
               onClick={prev}
@@ -65,14 +124,20 @@ export default function Testimonials() {
           </div>
         </div>
 
-        {/* Review Cards: 1 active card on mobile, all 3 side-by-side on desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* Review Cards: Horizontal swipe carousel on mobile, 3-column grid on desktop */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 md:gap-5 pb-4 md:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
           {reviews.map((rev, idx) => (
             <div
               key={rev.name}
-              className={`rounded-2xl p-5 sm:p-6 border transition-all duration-300 ${
-                idx === currentIndex ? 'block' : 'hidden md:block'
-              } ${
+              className={`w-[85vw] max-w-[340px] md:w-auto flex-shrink-0 snap-center rounded-2xl p-5 sm:p-6 border transition-all duration-300 ${
                 idx === currentIndex
                   ? 'border-[rgba(204,255,0,0.4)] bg-[#111118] shadow-[0_0_30px_rgba(204,255,0,0.08)]'
                   : 'border-white/[0.08] bg-[#0E0E14] hover:border-white/15'
@@ -115,11 +180,11 @@ export default function Testimonials() {
         </div>
 
         {/* Mobile pagination dots */}
-        <div className="flex md:hidden justify-center items-center gap-2 mt-6">
+        <div className="flex md:hidden justify-center items-center gap-2 mt-4">
           {reviews.map((_, i) => (
             <button
               key={i}
-              onClick={() => setCurrentIndex(i)}
+              onClick={() => scrollToCard(i)}
               className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                 i === currentIndex ? 'w-6 bg-[#CCFF00]' : 'w-2 bg-white/20'
               }`}
